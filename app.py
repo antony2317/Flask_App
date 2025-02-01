@@ -20,16 +20,19 @@ class Comment(db.Model):
     content = db.Column(db.Text, nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'), nullable=False)
 
+#Главнвя страница
 @app.route('/')
 def index():
     posts = Post.query.all()
     return render_template('index.html', posts=posts)
 
+# Страница просмотра полного текста
 @app.route('/post/<int:post_id>')
 def post(post_id):
     post = Post.query.get_or_404(post_id)
     return render_template('post.html', post=post)
 
+# Форма создания новой статьи
 @app.route('/new_post', methods=['GET', 'POST'])
 def new_post():
     if request.method == 'POST':
@@ -41,6 +44,7 @@ def new_post():
         return redirect(url_for('index'))
     return render_template('new_post.html')
 
+# Редактирование статьи
 @app.route('/edit_post/<int:post_id>', methods=['GET', 'POST'])
 def edit_post(post_id):
     post = Post.query.get_or_404(post_id)
@@ -51,6 +55,7 @@ def edit_post(post_id):
         return redirect(url_for('post', post_id=post.id))
     return render_template('edit_post.html', post=post)
 
+# Удаление статьи
 @app.route('/delete_post/<int:post_id>')
 def delete_post(post_id):
     post = Post.query.get_or_404(post_id)
